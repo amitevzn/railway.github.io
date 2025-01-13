@@ -220,12 +220,15 @@
   }
 
   function switchScene(scene) {
-    stopAutorotate();
+    // stopAutorotate();
     scene.view.setParameters(scene.data.initialViewParameters);
     scene.scene.switchTo();
-    startAutorotate();
+    
+    // startAutorotate();
     updateSceneName(scene);
     updateSceneList(scene);
+    activeScene = scene[0];
+    activeScene.scene.switchTo()
   }
 
   function updateSceneName(scene) {
