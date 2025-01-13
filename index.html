@@ -1,76 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Project Title</title>
-<meta charset="utf-8">
-<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
-<style> @-ms-viewport { width: device-width; } </style>
-<link rel="stylesheet" href="vendor/reset.min.css">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marzipano with Gyroscope</title>
+  <script src="https://cdn.marzipano.net/marzipano.js"></script>
+  <style>
+    body, html { height: 100%; margin: 0; overflow: hidden; }
+    #pano { width: 100%; height: 100%; }
+  </style>
 </head>
-<body class="multiple-scenes view-control-buttons">
+<body>
 
 <div id="pano"></div>
 
-<div id="sceneList">
-  <ul class="scenes">
-    
-      <a href="javascript:void(0)" class="scene" data-id="0-img_20250111_135921_00_005">
-        <li class="text">IMG_20250111_135921_00_005</li>
-      </a>
-    
-      <a href="javascript:void(0)" class="scene" data-id="1-img_20250111_135715_00_004">
-        <li class="text">IMG_20250111_135715_00_004</li>
-      </a>
-    
-  </ul>
-</div>
+<script>
+  // Initialize Marzipano Viewer
+  var viewer = new Marzipano.Viewer(document.getElementById('pano'));
 
-<div id="titleBar">
-  <h1 class="sceneName"></h1>
-</div>
+  // Load the panorama source
+  var source = Marzipano.ImageUrlSource.fromString(
+    'img2.jpg'  // Replace with your panorama image or imageset
+  );
+  
+  // Define the geometry of the panorama (in this case, using a cube map)
+  var geometry = new Marzipano.CubeGeometry([{ tileSize: 512, size: 512 }]);
 
-<a href="javascript:void(0)" id="autorotateToggle">
-  <img class="icon off" src="img/play.png">
-  <img class="icon on" src="img/pause.png">
-</a>
+  // Create a layer for the panorama
+  var layer = viewer.createLayer(source, geometry);
+  var camera = viewer.camera();
 
-<a href="javascript:void(0)" id="fullscreenToggle">
-  <img class="icon off" src="img/fullscreen.png">
-  <img class="icon on" src="img/windowed.png">
-</a>
+  // Variables for orientation values
+  var alpha = 0;  // Rotation around the z-axis (yaw)
+  var beta = 0;   // Rotation around the x-axis (pitch)
+  var gamma = 0;  // Rotation around the y-axis (roll)
 
-<a href="javascript:void(0)" id="sceneListToggle">
-  <img class="icon off" src="img/expand.png">
-  <img class="icon on" src="img/collapse.png">
-</a>
+  // Variables for smoothing the gyroscope data (optional)
+  var lastAlpha = 0, lastBeta = 0, lastGamma = 0;
 
-<a href="javascript:void(0)" id="viewUp" class="viewControlButton viewControlButton-1">
-  <img class="icon" src="img/up.png">
-</a>
-<a href="javascript:void(0)" id="viewDown" class="viewControlButton viewControlButton-2">
-  <img class="icon" src="img/down.png">
-</a>
-<a href="javascript:void(0)" id="viewLeft" class="viewControlButton viewControlButton-3">
-  <img class="icon" src="img/left.png">
-</a>
-<a href="javascript:void(0)" id="viewRight" class="viewControlButton viewControlButton-4">
-  <img class="icon" src="img/right.png">
-</a>
-<a href="javascript:void(0)" id="viewIn" class="viewControlButton viewControlButton-5">
-  <img class="icon" src="img/plus.png">
-</a>
-<a href="javascript:void(0)" id="viewOut" class="viewControlButton viewControlButton-6">
-  <img class="icon" src="img/minus.png">
-</a>
+  // Listen for device orientation changes
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener("deviceorientation", function(event) {
+      alpha = event.alpha || 0;   // Orientation around z-axis (yaw)
+      beta = event.beta || 0;     // Orientation around x-axis (pitch)
+      gamma = event.gamma || 0;   // Orientation around y-axis (roll)
 
-<script src="vendor/screenfull.min.js" ></script>
-<script src="vendor/bowser.min.js" ></script>
-<script src="vendor/marzipano.js" ></script>
+      updateCamera();
+    }, true);
+  } else {
+    console.log("Device orientation not supported.");
+  }
 
-<script src="data.js"></script>
-<script src="index.js"></script>
+  // Function to update the camera based on device orientation
+  function updateCamera() {
+    // Apply smoothing to prevent jittering
+    alpha = (alpha + lastAlpha) / 2;
+    beta = (beta + lastBeta) / 2;
+    gamma = (gamma + lastGamma) / 2;
 
+    // Convert from degrees to radians
+    var pitch = beta * Math.PI / 180;
+    var yaw = alpha * Math.PI / 180;
+    var roll = gamma * Math.PI / 180;
+
+    // Update the Marzipano camera
+    camera.lookAt(new Marzipano.Euler(pitch, yaw, roll));
+
+    // Store the current values for the next frame
+    lastAlpha = alpha;
+    lastBeta = beta;
+    lastGamma = gamma;
+  }
+</script>
 
 </body>
 </html>
