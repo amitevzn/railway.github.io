@@ -155,7 +155,7 @@
   // }
 
   // Set handler for autorotate toggle.
-  autorotateToggleElement.addEventListener('click', toggleAutorotate);
+  // autorotateToggleElement.addEventListener('click', toggleAutorotate);
 
   // Set up fullscreen mode, if supported.
   if (screenfull.enabled && data.settings.fullscreenButton) {
@@ -183,37 +183,37 @@
   }
 
   // Set handler for scene switch.
-  scenes.forEach(function(scene) {
-    var el = document.querySelector('#sceneList .scene[data-id="' + scene.data.id + '"]');
-    el.addEventListener('click', function() {
-      switchScene(scene);
-      // On mobile, hide scene list after selecting a scene.
-      if (document.body.classList.contains('mobile')) {
-        hideSceneList();
-      }
-    });
-  });
+  // scenes.forEach(function(scene) {
+  //   var el = document.querySelector('#sceneList .scene[data-id="' + scene.data.id + '"]');
+  //   el.addEventListener('click', function() {
+  //     switchScene(scene);
+  //     // On mobile, hide scene list after selecting a scene.
+  //     if (document.body.classList.contains('mobile')) {
+  //       hideSceneList();
+  //     }
+  //   });
+  // });
 
-  // DOM elements for view controls.
-  var viewUpElement = document.querySelector('#viewUp');
-  var viewDownElement = document.querySelector('#viewDown');
-  var viewLeftElement = document.querySelector('#viewLeft');
-  var viewRightElement = document.querySelector('#viewRight');
-  var viewInElement = document.querySelector('#viewIn');
-  var viewOutElement = document.querySelector('#viewOut');
+  // // DOM elements for view controls.
+  // var viewUpElement = document.querySelector('#viewUp');
+  // var viewDownElement = document.querySelector('#viewDown');
+  // var viewLeftElement = document.querySelector('#viewLeft');
+  // var viewRightElement = document.querySelector('#viewRight');
+  // var viewInElement = document.querySelector('#viewIn');
+  // var viewOutElement = document.querySelector('#viewOut');
 
-  // Dynamic parameters for controls.
-  var velocity = 0.7;
-  var friction = 3;
+  // // Dynamic parameters for controls.
+  // var velocity = 0.7;
+  // var friction = 3;
 
-  // Associate view controls with elements.
-  var controls = viewer.controls();
-  controls.registerMethod('upElement',    new Marzipano.ElementPressControlMethod(viewUpElement,     'y', -velocity, friction), true);
-  controls.registerMethod('downElement',  new Marzipano.ElementPressControlMethod(viewDownElement,   'y',  velocity, friction), true);
-  controls.registerMethod('leftElement',  new Marzipano.ElementPressControlMethod(viewLeftElement,   'x', -velocity, friction), true);
-  controls.registerMethod('rightElement', new Marzipano.ElementPressControlMethod(viewRightElement,  'x',  velocity, friction), true);
-  controls.registerMethod('inElement',    new Marzipano.ElementPressControlMethod(viewInElement,  'zoom', -velocity, friction), true);
-  controls.registerMethod('outElement',   new Marzipano.ElementPressControlMethod(viewOutElement, 'zoom',  velocity, friction), true);
+  // // Associate view controls with elements.
+  // var controls = viewer.controls();
+  // controls.registerMethod('upElement',    new Marzipano.ElementPressControlMethod(viewUpElement,     'y', -velocity, friction), true);
+  // controls.registerMethod('downElement',  new Marzipano.ElementPressControlMethod(viewDownElement,   'y',  velocity, friction), true);
+  // controls.registerMethod('leftElement',  new Marzipano.ElementPressControlMethod(viewLeftElement,   'x', -velocity, friction), true);
+  // controls.registerMethod('rightElement', new Marzipano.ElementPressControlMethod(viewRightElement,  'x',  velocity, friction), true);
+  // controls.registerMethod('inElement',    new Marzipano.ElementPressControlMethod(viewInElement,  'zoom', -velocity, friction), true);
+  // controls.registerMethod('outElement',   new Marzipano.ElementPressControlMethod(viewOutElement, 'zoom',  velocity, friction), true);
 
   function sanitize(s) {
     return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
