@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>360° Virtual Tour with Device Orientation</title>
-    <script src="vendor/marzipano.js"></script> <!-- Ensure this is included -->
+    <!-- <script src="vendor/screenfull.min.js" ></script> -->
+<script src="vendor/bowser.min.js" ></script>
+<script src="vendor/marzipano.js" ></script>
     <script src="data.js"></script>
+    <script src="index.js"></script>
     <style>
         body, html {
             margin: 0;
@@ -45,7 +48,7 @@
         <button id="requestPermissionButton">Enable Motion Controls</button>
     </div>
 
-    <script>
+    <!-- <script>
         (function() {
             var Marzipano = window.Marzipano;
 
@@ -115,7 +118,7 @@
             document.getElementById('requestPermissionButton').addEventListener('click', requestPermission);
 
         })();
-    </script>
+    </script> -->
 
 </body>
 </html>
