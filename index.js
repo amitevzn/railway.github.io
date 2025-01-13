@@ -107,15 +107,52 @@
     };
   });
 
-  // Set up autorotate, if enabled.
-  var autorotate = Marzipano.autorotate({
-    yawSpeed: 0.03,
-    targetPitch: 0,
-    targetFov: Math.PI/2
-  });
-  if (data.settings.autorotateEnabled) {
-    autorotateToggleElement.classList.add('enabled');
+
+  // Display the initial scene.
+  // switchScene(scenes[0]);
+  var activeScene = scenes[0]; // Default active scene
+  activeScene.scene.switchTo();
+
+  function handleOrientation(event) {
+      if (!activeScene) return;
+
+      let yaw = -event.alpha * (Math.PI / 180);   // Convert to radians
+      let pitch = event.beta * (Math.PI / 180);
+
+      activeScene.view.setYaw(yaw);
+      activeScene.view.setPitch(pitch);
+
+      document.getElementById('alpha').textContent = event.alpha.toFixed(2);
+      document.getElementById('beta').textContent = event.beta.toFixed(2);
+      document.getElementById('gamma').textContent = event.gamma.toFixed(2);
   }
+
+  function requestPermission() {
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+          DeviceOrientationEvent.requestPermission()
+              .then(permissionState => {
+                  if (permissionState === 'granted') {
+                      window.addEventListener('deviceorientation', handleOrientation);
+                  }
+              })
+              .catch(console.error);
+      } else {
+          window.addEventListener('deviceorientation', handleOrientation);
+      }
+  }
+
+  document.getElementById('requestPermissionButton').addEventListener('click', requestPermission);
+
+
+  // Set up autorotate, if enabled.
+  // var autorotate = Marzipano.autorotate({
+  //   yawSpeed: 0.03,
+  //   targetPitch: 0,
+  //   targetFov: Math.PI/2
+  // });
+  // if (data.settings.autorotateEnabled) {
+  //   autorotateToggleElement.classList.add('enabled');
+  // }
 
   // Set handler for autorotate toggle.
   autorotateToggleElement.addEventListener('click', toggleAutorotate);
@@ -386,40 +423,6 @@
     return null;
   }
 
-  // Display the initial scene.
-  // switchScene(scenes[0]);
-  var activeScene = scenes[0]; // Default active scene
-  activeScene.scene.switchTo();
-
-  function handleOrientation(event) {
-      if (!activeScene) return;
-
-      let yaw = -event.alpha * (Math.PI / 180);   // Convert to radians
-      let pitch = event.beta * (Math.PI / 180);
-
-      activeScene.view.setYaw(yaw);
-      activeScene.view.setPitch(pitch);
-
-      document.getElementById('alpha').textContent = event.alpha.toFixed(2);
-      document.getElementById('beta').textContent = event.beta.toFixed(2);
-      document.getElementById('gamma').textContent = event.gamma.toFixed(2);
-  }
-
-  function requestPermission() {
-      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-          DeviceOrientationEvent.requestPermission()
-              .then(permissionState => {
-                  if (permissionState === 'granted') {
-                      window.addEventListener('deviceorientation', handleOrientation);
-                  }
-              })
-              .catch(console.error);
-      } else {
-          window.addEventListener('deviceorientation', handleOrientation);
-      }
-  }
-
-  document.getElementById('requestPermissionButton').addEventListener('click', requestPermission);
-
+  
 
 })();
