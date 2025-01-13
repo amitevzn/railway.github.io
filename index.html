@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marzipano with Gyroscope</title>
-  <script src="https://cdn.marzipano.net/marzipano.js"></script>
+  <script src="vendor/marzipano.js"></script> <!-- Updated script source -->
   <style>
     body, html { height: 100%; margin: 0; overflow: hidden; }
     #pano { width: 100%; height: 100%; }
@@ -20,15 +20,20 @@
 
   // Load the panorama source
   var source = Marzipano.ImageUrlSource.fromString(
-    'img2.jpg'  // Replace with your panorama image or imageset
+    'path/to/your/panorama.jpg'  // Replace with your panorama image or imageset
   );
-  
-  // Define the geometry of the panorama (in this case, using a cube map)
-  var geometry = new Marzipano.CubeGeometry([{ tileSize: 512, size: 512 }]);
 
-  // Create a layer for the panorama
-  var layer = viewer.createLayer(source, geometry);
-  var camera = viewer.camera();
+  // Define the geometry of the panorama (using spherical geometry)
+  var geometry = new Marzipano.EquirectGeometry([{ width: 4000, height: 2000 }]);
+
+  // Create a scene for the panorama
+  var scene = viewer.createScene({
+    source: source,
+    geometry: geometry
+  });
+
+  // Set the initial scene as the current scene
+  scene.switchTo();
 
   // Variables for orientation values
   var alpha = 0;  // Rotation around the z-axis (yaw)
@@ -64,7 +69,9 @@
     var roll = gamma * Math.PI / 180;
 
     // Update the Marzipano camera
-    camera.lookAt(new Marzipano.Euler(pitch, yaw, roll));
+    scene.view().setYaw(yaw);  // Set the yaw (rotation around z-axis)
+    scene.view().setPitch(pitch);  // Set the pitch (rotation around x-axis)
+    scene.view().setRoll(roll);  // Set the roll (rotation around y-axis)
 
     // Store the current values for the next frame
     lastAlpha = alpha;
