@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>360° Virtual Tour with Device Orientation</title>
-    <script src="vendor/marzipano.js"></script> <!-- Make sure to include Marzipano library -->
+    <script src="vendor/marzipano.js"></script> <!-- Ensure this is included -->
+    <script src="data.js"></script>
     <style>
         body, html {
             margin: 0;
@@ -52,27 +53,45 @@
             var panoElement = document.getElementById('pano');
             var viewer = new Marzipano.Viewer(panoElement);
 
-            // Load panorama image (replace with your image URL)
-            var source = Marzipano.ImageUrlSource.fromString("img2.jpg");
-            var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]); // Change width based on your image resolution
-            var limiter = Marzipano.RectilinearView.limit.traditional(1024, 120 * Math.PI / 180);
-            var view = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, roll: 0 }, limiter);
+            // Scene data (replace with actual JSON data)
+            var data = window.APP_DATA;
 
-            var scene = viewer.createScene({
-                source: source,
-                geometry: geometry,
-                view: view
+            var scenes = data.scenes.map(function(sceneData) {
+                var urlPrefix = "tiles";
+                var source = Marzipano.ImageUrlSource.fromString(
+                    urlPrefix + "/" + sceneData.id + "/{z}/{f}/{y}/{x}.jpg",
+                    { cubeMapPreviewUrl: urlPrefix + "/" + sceneData.id + "/preview.jpg" }
+                );
+
+                var geometry = new Marzipano.CubeGeometry(sceneData.levels);
+                var limiter = Marzipano.RectilinearView.limit.traditional(sceneData.faceSize, 100 * Math.PI / 180, 120 * Math.PI / 180);
+                var view = new Marzipano.RectilinearView(sceneData.initialViewParameters, limiter);
+
+                var scene = viewer.createScene({
+                    source: source,
+                    geometry: geometry,
+                    view: view,
+                    pinFirstLevel: true
+                });
+
+                return {
+                    data: sceneData,
+                    scene: scene,
+                    view: view
+                };
             });
 
-            scene.switchTo();
+            var activeScene = scenes[0]; // Default active scene
+            activeScene.scene.switchTo();
 
             function handleOrientation(event) {
+                if (!activeScene) return;
+
                 let yaw = -event.alpha * (Math.PI / 180);   // Convert to radians
                 let pitch = event.beta * (Math.PI / 180);
-                let roll = event.gamma * (Math.PI / 180);
 
-                view.setYaw(yaw);
-                view.setPitch(pitch);
+                activeScene.view.setYaw(yaw);
+                activeScene.view.setPitch(pitch);
 
                 document.getElementById('alpha').textContent = event.alpha.toFixed(2);
                 document.getElementById('beta').textContent = event.beta.toFixed(2);
