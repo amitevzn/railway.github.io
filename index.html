@@ -1,84 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marzipano with Gyroscope</title>
-  <script src="vendor/marzipano.js"></script> <!-- Updated script source -->
-  <style>
-    body, html { height: 100%; margin: 0; overflow: hidden; }
-    #pano { width: 100%; height: 100%; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Orientation and Motion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .data {
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
+    <h1>Device Orientation and Motion Data</h1>
+    <div class="data">
+        <h2>Orientation</h2>
+        <p>Alpha: <span id="alpha">0</span></p>
+        <p>Beta: <span id="beta">0</span></p>
+        <p>Gamma: <span id="gamma">0</span></p>
+    </div>
+    <div class="data">
+        <h2>Motion</h2>
+        <p>Acceleration X: <span id="accel-x">0</span></p>
+        <p>Acceleration Y: <span id="accel-y">0</span></p>
+        <p>Acceleration Z: <span id="accel-z">0</span></p>
+        <p>Rotation Rate Alpha: <span id="rot-alpha">0</span></p>
+        <p>Rotation Rate Beta: <span id="rot-beta">0</span></p>
+        <p>Rotation Rate Gamma: <span id="rot-gamma">0</span></p>
+    </div>
+    <button id="requestPermissionButton">Request Permission</button>
+    <script>
+        function handleOrientation(event) {
+            document.getElementById('alpha').textContent = event.alpha.toFixed(2);
+            document.getElementById('beta').textContent = event.beta.toFixed(2);
+            document.getElementById('gamma').textContent = event.gamma.toFixed(2);
+        }
 
-<div id="pano"></div>
+        function handleMotion(event) {
+            const acceleration = event.acceleration;
+            const rotationRate = event.rotationRate;
 
-<script>
-  // Initialize Marzipano Viewer
-  var viewer = new Marzipano.Viewer(document.getElementById('pano'));
+            document.getElementById('accel-x').textContent = acceleration.x.toFixed(2);
+            document.getElementById('accel-y').textContent = acceleration.y.toFixed(2);
+            document.getElementById('accel-z').textContent = acceleration.z.toFixed(2);
 
-  // Load the panorama source
-  var source = Marzipano.ImageUrlSource.fromString(
-    'path/to/your/panorama.jpg'  // Replace with your panorama image or imageset
-  );
+            document.getElementById('rot-alpha').textContent = rotationRate.alpha.toFixed(2);
+            document.getElementById('rot-beta').textContent = rotationRate.beta.toFixed(2);
+            document.getElementById('rot-gamma').textContent = rotationRate.gamma.toFixed(2);
+        }
 
-  // Define the geometry of the panorama (using spherical geometry)
-  var geometry = new Marzipano.EquirectGeometry([{ width: 4000, height: 2000 }]);
+        function requestPermission() {
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('devicemotion', handleMotion);
+                            window.addEventListener('deviceorientation', handleOrientation);
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                window.addEventListener('devicemotion', handleMotion);
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+        }
 
-  // Create a scene for the panorama
-  var scene = viewer.createScene({
-    source: source,
-    geometry: geometry
-  });
-
-  // Set the initial scene as the current scene
-  scene.switchTo();
-
-  // Variables for orientation values
-  var alpha = 0;  // Rotation around the z-axis (yaw)
-  var beta = 0;   // Rotation around the x-axis (pitch)
-  var gamma = 0;  // Rotation around the y-axis (roll)
-
-  // Variables for smoothing the gyroscope data (optional)
-  var lastAlpha = 0, lastBeta = 0, lastGamma = 0;
-
-  // Listen for device orientation changes
-  if (window.DeviceOrientationEvent) {
-    window.addEventListener("deviceorientation", function(event) {
-      alpha = event.alpha || 0;   // Orientation around z-axis (yaw)
-      beta = event.beta || 0;     // Orientation around x-axis (pitch)
-      gamma = event.gamma || 0;   // Orientation around y-axis (roll)
-
-      updateCamera();
-    }, true);
-  } else {
-    console.log("Device orientation not supported.");
-  }
-
-  // Function to update the camera based on device orientation
-  function updateCamera() {
-    // Apply smoothing to prevent jittering
-    alpha = (alpha + lastAlpha) / 2;
-    beta = (beta + lastBeta) / 2;
-    gamma = (gamma + lastGamma) / 2;
-
-    // Convert from degrees to radians
-    var pitch = beta * Math.PI / 180;
-    var yaw = alpha * Math.PI / 180;
-    var roll = gamma * Math.PI / 180;
-
-    // Update the Marzipano camera
-    scene.view().setYaw(yaw);  // Set the yaw (rotation around z-axis)
-    scene.view().setPitch(pitch);  // Set the pitch (rotation around x-axis)
-    scene.view().setRoll(roll);  // Set the roll (rotation around y-axis)
-
-    // Store the current values for the next frame
-    lastAlpha = alpha;
-    lastBeta = beta;
-    lastGamma = gamma;
-  }
-</script>
-
+        document.getElementById('requestPermissionButton').addEventListener('click', requestPermission);
+    </script>
 </body>
 </html>
