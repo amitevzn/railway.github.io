@@ -111,6 +111,12 @@ var APP_DATA = {
           "pitch": 0.06962822906529098,
           "rotation": 12.566370614359176,
           "target": "0-img_20250111_135921_00_005"
+        },
+        {
+          "yaw": 0.6303981865659143,
+          "pitch": 0.06962822906529098,
+          "rotation": 12.566370614359176,
+          "target": "0-img_20250112_121853_00_064"
         }
       ],
       "infoHotspots": [
@@ -129,6 +135,104 @@ var APP_DATA = {
         {
           "yaw": 1.940643052004389,
           "pitch": 0.2440496865378421,
+          "title": "Drinking Water",
+          "text": "Text"
+        }
+      ]
+    },
+    {
+      "id": "0-img_20250112_121853_00_064",
+      "name": "IMG_20250112_121853_00_064",
+      "levels": [
+        {
+          "tileSize": 256,
+          "size": 256,
+          "fallbackOnly": true
+        },
+        {
+          "tileSize": 512,
+          "size": 512
+        },
+        {
+          "tileSize": 512,
+          "size": 1024
+        },
+        {
+          "tileSize": 512,
+          "size": 2048
+        },
+        {
+          "tileSize": 512,
+          "size": 4096
+        }
+      ],
+      "faceSize": 2976,
+      "initialViewParameters": {
+        "pitch": 0,
+        "yaw": 0,
+        "fov": 1.5707963267948966
+      },
+      "linkHotspots": [
+        {
+          "yaw": 0.9572182653751593,
+          "pitch": 0.30133821946654393,
+          "rotation": 0,
+          "target": "1-img_20250112_122018_00_065"
+        }
+      ],
+      "infoHotspots": [
+        {
+          "yaw": 3.0443224713903785,
+          "pitch": 0.11219745822018368,
+          "title": "Divyangan Lavatory",
+          "text": "Text"
+        }
+      ]
+    },
+    {
+      "id": "1-img_20250112_122018_00_065",
+      "name": "IMG_20250112_122018_00_065",
+      "levels": [
+        {
+          "tileSize": 256,
+          "size": 256,
+          "fallbackOnly": true
+        },
+        {
+          "tileSize": 512,
+          "size": 512
+        },
+        {
+          "tileSize": 512,
+          "size": 1024
+        },
+        {
+          "tileSize": 512,
+          "size": 2048
+        },
+        {
+          "tileSize": 512,
+          "size": 4096
+        }
+      ],
+      "faceSize": 2976,
+      "initialViewParameters": {
+        "pitch": 0,
+        "yaw": 0,
+        "fov": 1.5707963267948966
+      },
+      "linkHotspots": [
+        {
+          "yaw": -2.571932837353497,
+          "pitch": 0.15514812064676242,
+          "rotation": 0,
+          "target": "0-img_20250112_121853_00_064"
+        }
+      ],
+      "infoHotspots": [
+        {
+          "yaw": 2.9081620448895107,
+          "pitch": 0.17363610061849144,
           "title": "Drinking Water",
           "text": "Text"
         }
