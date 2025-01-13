@@ -221,10 +221,14 @@
 
   function switchScene(scene) {
     // stopAutorotate();
+    activeScene = scene;
     scene.view.setParameters(scene.data.initialViewParameters);
     scene.scene.switchTo();
-    activeScene = scene[0];
+    
     // activeScene.scene.switchTo();
+    // Ensure orientation updates apply to the new scene
+    window.removeEventListener('deviceorientation', handleOrientation);
+    window.addEventListener('deviceorientation', handleOrientation);
     
     // startAutorotate();
     updateSceneName(scene);
