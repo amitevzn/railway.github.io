@@ -1,6 +1,55 @@
 var APP_DATA = {
   "scenes": [
     {
+      "id": "0-img_20250112_142439_00_113",
+      "name": "IMG_20250112_142439_00_113",
+      "levels": [
+        {
+          "tileSize": 256,
+          "size": 256,
+          "fallbackOnly": true
+        },
+        {
+          "tileSize": 512,
+          "size": 512
+        },
+        {
+          "tileSize": 512,
+          "size": 1024
+        },
+        {
+          "tileSize": 512,
+          "size": 2048
+        },
+        {
+          "tileSize": 512,
+          "size": 4096
+        }
+      ],
+      "faceSize": 2976,
+      "initialViewParameters": {
+        "pitch": 0,
+        "yaw": 0,
+        "fov": 1.5707963267948966
+      },
+      "linkHotspots": [
+        {
+          "yaw": 1.3097462685782766,
+          "pitch": 0.0369559232661576,
+          "rotation": 0,
+          "target": "0-img_20250111_135921_00_005"
+        }
+      ],
+      "infoHotspots": [
+        {
+          "yaw": -2.9081943455048815,
+          "pitch": 0.012248940961740118,
+          "title": "Auto Stand",
+          "text": "Text"
+        }
+      ]
+    },
+    {
       "id": "0-img_20250111_135921_00_005",
       "name": "IMG_20250111_135921_00_005",
       "levels": [
